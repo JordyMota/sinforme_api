@@ -1,12 +1,13 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
+const publicDir = require('path').join(__dirname,'/../assets');
 
 const app = express();
 const server = require('http').Server(app);
 
 mongoose.connect(
-	"mongodb://admin:xZtlko123@ds129233.mlab.com:29233/sinforme_teste",
+"mongodb://admin:xZtlko123@ds129233.mlab.com:29233/sinforme_teste",
 	{
 		useNewUrlParser: true,
 		useUnifiedTopology: true,
@@ -26,8 +27,9 @@ app.use((req, res, next)=>{
 
 app.use(cors());
 app.use(express.json());
+app.use(express.static(publicDir)); 
 app.use(require('./routes'));
 
-server.listen(3001,()=> {
+server.listen(3000,()=> {
 	console.log('Server Started');
 });

@@ -4,6 +4,7 @@ const userSchema = new mongoose.Schema({
     name: String,
     bornDate: Date,
     gender: String,
+    uf: String,
     createdAt: {
     	type: Date,
     	default: Date.now

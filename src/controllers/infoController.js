@@ -1,37 +1,70 @@
-const User = require('../models/info');
+const Info = require('../models/info');
 
 module.exports = {
 	async indexAll(req, res) {
-		const users = await User.find({deletedAt: null}).sort('-createdAt');
-		return res.json(users);
+		const infos = await Info.find({deletedAt: null}).sort('-createdAt');
+		return res.json(infos.map(item => {
+			const { priority, _id, title, shortDescript } = item;
+			return {
+				priority,
+				_id,
+				title,
+				shortDescript
+			}
+		}));
     },
 
 	async indexPriority(req, res) {
-		const users = await User.find({deletedAt: null, priority: true}).sort('-createdAt');
-		return res.json(users);
+		const infos = await Info.find({deletedAt: null, priority: true}).sort('-createdAt');
+		return res.json(infos.map(item => {
+			const { priority, _id, title, shortDescript } = item;
+			return {
+				priority,
+				_id,
+				title,
+				shortDescript
+			}
+		}));
     },
     
 	async index(req, res) {
-		const user = await User.findById(req.params.id);
-		return res.json(users);
+		if (!req.params.id) {
+			res.status(400).send({ error: 'É obrigatório ser enviado o id da informação.' });
+			return;
+		}
+		const selectedInfo = await Info.findById(req.params.id);
+		return res.json(selectedInfo);
 	},
 
 	async store(req, res) {
-		const user = await User.create(req.body);
-		return res.json(user);
+		const { title, descript, shortDescript } = req.body;
+		if (!title || !descript || !shortDescript) {
+			res.status(400).send({ error: 'É necessário enviar todos os dados obrigatórios.' });
+			return;
+		}
+		const selectedInfo = await Info.create(req.body);
+		return res.json(selectedInfo);
 	},
 
 	async update(req, res) {
-		const user = await User.findById(req.params.id);
-		user.set(req.body);
-		await user.save();
-		return res.json(user);
+		if (!req.params.id) {
+			res.status(400).send({ error: 'É obrigatório ser enviado o id da informação.' });
+			return;
+		}
+		const selectedInfo = await Info.findById(req.params.id);
+		selectedInfo.set(req.body);
+		await selectedInfo.save();
+		return res.json(selectedInfo);
 	},
 
 	async delete(req, res) {
-		const user = await User.findById(req.params.id);
-		user.set({deletedAt: new Date()});
-		await user.save();
-		return res.json(user);
+		if (!req.params.id) {
+			res.status(400).send({ error: 'É obrigatório ser enviado o id da informação.' });
+			return;
+		}
+		const selectedInfo = await Info.findById(req.params.id);
+		selectedInfo.set({deletedAt: new Date()});
+		await selectedInfo.save();
+		return res.json(selectedInfo);
 	}
 };
