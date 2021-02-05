@@ -7,7 +7,7 @@ const app = express();
 const server = require('http').Server(app);
 
 mongoose.connect(
-"mongodb://admin:xZtlko123@ds129233.mlab.com:29233/sinforme_teste",
+"**database_url**",
 	{
 		useNewUrlParser: true,
 		useUnifiedTopology: true,
